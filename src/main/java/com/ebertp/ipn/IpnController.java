@@ -38,7 +38,8 @@ public class IpnController {
 	private static Logger LOG = LoggerFactory.getLogger(IpnController.class);
 
 
-	private static final String urlPaypalSandbox = "https://ipnpb.sandbox.paypal.com/cgi-bin/webscr";
+	private static final String urlPaypalSandbox1 = "https://ipnpb.sandbox.paypal.com/cgi-bin/webscr";
+	private static final String urlPaypalSandbox2 =  "https://www.sandbox.paypal.com/cgi-bin/webscr";
 	@SuppressWarnings("unused")
 	private static final String urlPaypalLive = "https://ipnpb.paypal.com/cgi-bin/webscr";
 
@@ -70,12 +71,8 @@ public class IpnController {
 			r = request.getReader();
 			StringBuffer buffer = new StringBuffer();
 			Enumeration<String> n = request.getParameterNames();
-			int i = 0;
 			while (n.hasMoreElements()) {
-				if (i >0) {
 				buffer.append("&");
-				}
-				i++;
 				String s = (String) n.nextElement();
 				buffer.append(s);
 				buffer.append("=");
@@ -101,7 +98,7 @@ public class IpnController {
 	 * @throws Exception in case of an Error or Paypal send INVLAID back
 	 */
 	private void sendIpnMessageToPaypal(String ipnMessage) throws Exception {
-		String url = urlPaypalSandbox;
+		String url = urlPaypalSandbox1;
 		// TODO do this in a new thread
 		LOG.debug("Test");
 		String ipnReturnMessage = "cmd=_notify-validate"+ipnMessage;
@@ -113,6 +110,8 @@ public class IpnController {
 
 		// TODO ask for user agent
 		post.setHeader("User-Agent", USER_AGENT);
+		post.setHeader("content-type", "application/x-www-form-urlencoded");
+		post.setHeader("host", "www.paypal.com");
 
 		post.setEntity(new StringEntity(ipnReturnMessage) );
 		HttpResponse response = client.execute(post);
