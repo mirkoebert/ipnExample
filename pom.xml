@@ -67,4 +67,8 @@
 	</build>
 
 
+	<organization>
+		<url>www.ebert-p.com</url>
+		<name>Ebert und Partner</name>
+	</organization>
 </project>
