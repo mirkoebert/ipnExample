@@ -150,13 +150,12 @@ public class IpnController {
 		os.write(ipnReturnMessage.getBytes());
 		conn.connect();
 		
-		
 
-		
-		
+		InputStream in = conn.getInputStream();
+		String ins = IOUtils.toString(in);
 		String m = conn.getResponseMessage();
-		LOG.debug("Response Code : "  + conn.getResponseCode()+" "+m);
-		if (m.equalsIgnoreCase("VERIFIED")) {
+		LOG.debug("Response Code : "  + conn.getResponseCode()+" "+m+" - "+ins);
+		if (ins.equalsIgnoreCase("VERIFIED")) {
 			LOG.info("IPN Message verified by Paypal successfully");
 		} else {
 			throw new Exception("IPN Message not verified by Paypal: "+m);
