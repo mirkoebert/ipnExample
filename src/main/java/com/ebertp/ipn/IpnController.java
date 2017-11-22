@@ -108,20 +108,21 @@ public class IpnController {
 
 		LOG.info("[ uri : {} ] - IPN Callback wird aufgerufen", reqUri);
 		// write an ipn flag to bestellung or do some other clever things
-		Enumeration<String> h = request.getHeaderNames();
-		while (h.hasMoreElements()) {
-			String s = (String) h.nextElement();
-			LOG.debug("Header: "+s+" - "+request.getHeader(s));
-		}
-
+//		Enumeration<String> h = request.getHeaderNames();
+//		while (h.hasMoreElements()) {
+//			String s = (String) h.nextElement();
+//			LOG.debug("Header: "+s+" - "+request.getHeader(s));
+//		}
+		response.setStatus(500);
 		try {
 			ServletInputStream in = request.getInputStream();
 			String ins = IOUtils.toString(in);
 			LOG.info("XXX1: "+ins);
-			sendIpnMessageToPaypal2(ins);
-			response.setStatus(200);
+			if(!ins.isEmpty()) {
+				sendIpnMessageToPaypal2(ins);
+				response.setStatus(200);
+			} 
 		} catch (Exception e) {
-			response.setStatus(500);
 			LOG.error(e.getMessage());
 		}			
 	}
