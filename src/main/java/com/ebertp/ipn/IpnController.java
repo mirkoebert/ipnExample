@@ -2,6 +2,9 @@ package com.ebertp.ipn;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 
@@ -80,11 +83,10 @@ public class IpnController {
 				buffer.append("=");
 				buffer.append(request.getParameter(s));
 			}
-			LOG.info("XXX1: "+buffer);
 			LOG.info("XXX2: "+request.getContentLength());
 
 			// TODO Identifizieren der Bestellung an Hand von Informationen aus dem IPN
-			sendIpnMessageToPaypal(buffer.toString());
+			sendIpnMessageToPaypal2(buffer.toString());
 			// write empty 200 response
 			response.setStatus(200);
 		} catch (Exception e) {
@@ -114,6 +116,7 @@ public class IpnController {
 		post.setHeader("content-type", "application/x-www-form-urlencoded");
 		post.setHeader("host", "www.paypal.com");
 
+		
 		post.setEntity(new StringEntity(ipnReturnMessage) );
 		
 		HttpResponse response = client.execute(post);
@@ -132,5 +135,32 @@ public class IpnController {
 		}
 	}
 
+
+	private void sendIpnMessageToPaypal2(String ipnReturnMessage) throws Exception {
+		String url = urlPaypalSandbox1;
+		// TODO do this in a new thread
+		LOG.debug("Test 2");
+		LOG.info("Send IPN Message 'verified' to Paypal: "+url+" with IPN: "+ipnReturnMessage);
+		
+		URL u = new URL(url);
+		HttpURLConnection conn = (HttpURLConnection) u.openConnection();
+		conn.setDoOutput(true);
+		conn.setRequestMethod("POST");
+		OutputStream os = conn.getOutputStream();
+		os.write(ipnReturnMessage.getBytes());
+		conn.connect();
+		
+		
+
+		
+		
+		String m = conn.getResponseMessage();
+		LOG.debug("Response Code : "  + conn.getResponseCode()+" "+m);
+		if (m.equalsIgnoreCase("VERIFIED")) {
+			LOG.info("IPN Message verified by Paypal successfully");
+		} else {
+			throw new Exception("IPN Message not verified by Paypal: "+m);
+		}
+	}
 
 }
