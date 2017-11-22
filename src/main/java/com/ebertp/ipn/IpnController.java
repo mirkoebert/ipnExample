@@ -64,8 +64,12 @@ public class IpnController {
 			r = request.getReader();
 			StringBuffer buffer = new StringBuffer();
 			Enumeration<String> n = request.getParameterNames();
+			int i = 0;
 			while (n.hasMoreElements()) {
+				if (i >0) {
 				buffer.append("&");
+				}
+				i++;
 				String s = (String) n.nextElement();
 				buffer.append(s);
 				buffer.append("=");
