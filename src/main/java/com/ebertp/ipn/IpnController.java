@@ -51,6 +51,8 @@ public class IpnController {
 	private static final String urlPaypalLive1 = "https://ipnpb.paypal.com/cgi-bin/webscr";
 	@SuppressWarnings("unused")
 	private static final String urlPaypalLive2 = "https://www.paypal.com/cgi-bin/webscr";
+	
+	private String url = urlPaypalSandbox2;
 
 
 	// TODO register IPN callback URL at Paypal Request
@@ -108,24 +110,37 @@ public class IpnController {
 
 		LOG.info("[ uri : {} ] - IPN Callback wird aufgerufen", reqUri);
 		// write an ipn flag to bestellung or do some other clever things
-//		Enumeration<String> h = request.getHeaderNames();
-//		while (h.hasMoreElements()) {
-//			String s = (String) h.nextElement();
-//			LOG.debug("Header: "+s+" - "+request.getHeader(s));
-//		}
-		response.setStatus(500);
+		Enumeration<String> h = request.getHeaderNames();
+		while (h.hasMoreElements()) {
+			String s = (String) h.nextElement();
+			LOG.debug("Header: "+s+" - "+request.getHeader(s));
+		}
+
 		try {
-			ServletInputStream in = request.getInputStream();
-			String ins = IOUtils.toString(in);
-			LOG.info("XXX1: "+ins);
-			if(!ins.isEmpty()) {
-				sendIpnMessageToPaypal2(ins);
-				response.setStatus(200);
-			} 
+			StringBuffer buffer = new StringBuffer();
+			Enumeration<String> n = request.getParameterNames();
+			request.getP
+			while (n.hasMoreElements()) {
+				
+				String s = (String) n.nextElement();
+				buffer.append(s);
+				buffer.append("=");
+				buffer.append(request.getParameter(s));
+				buffer.append("&");
+			}
+			buffer.append("cmd=_notify-validate");
+			LOG.info("XXX2: "+request.getContentLength());
+
+			// TODO Identifizieren der Bestellung an Hand von Informationen aus dem IPN
+			sendIpnMessageToPaypal(buffer.toString());
+			// write empty 200 response
+			response.setStatus(200);
 		} catch (Exception e) {
+			response.setStatus(500);
 			LOG.error(e.getMessage());
-		}			
+		}
 	}
+
 	
 	/**
 	 * Return the unchanged IPN Message to Paypal only with notify validated.
@@ -134,7 +149,6 @@ public class IpnController {
 	 * @throws Exception in case of an Error or Paypal send INVLAID back
 	 */
 	private void sendIpnMessageToPaypal(String ipnReturnMessage) throws Exception {
-		String url = urlPaypalSandbox1;
 		// TODO do this in a new thread
 		LOG.debug("Test");
 		LOG.info("Send IPN Message 'verified' to Paypal: "+url+" with IPN: "+ipnReturnMessage);
@@ -169,7 +183,6 @@ public class IpnController {
 
 
 	private void sendIpnMessageToPaypal2(String ipnReturnMessage) throws Exception {
-		String url = urlPaypalSandbox1;
 		// TODO do this in a new thread
 		LOG.debug("Test 2");
 		LOG.info("Send IPN Message 'verified' to Paypal: "+url+" with IPN: "+ipnReturnMessage);
@@ -183,6 +196,7 @@ public class IpnController {
 		conn.connect();
 		
 
+		
 		InputStream in = conn.getInputStream();
 		String ins = IOUtils.toString(in);
 		String m = conn.getResponseMessage();
