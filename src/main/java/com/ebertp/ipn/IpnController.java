@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -61,7 +62,7 @@ public class IpnController {
 		Enumeration<String> h = request.getHeaderNames();
 		while (h.hasMoreElements()) {
 			String s = (String) h.nextElement();
-			LOG.debug(s+" - "+request.getHeader(s));
+			LOG.debug("Header: "+s+" - "+request.getHeader(s));
 		}
 
 		BufferedReader r;
@@ -115,7 +116,11 @@ public class IpnController {
 
 		post.setEntity(new StringEntity(ipnReturnMessage) );
 		HttpResponse response = client.execute(post);
-		LOG.debug("Response Code : "  + response.getStatusLine().getStatusCode());
+		LOG.debug("Response Code : "  + response.getStatusLine().getStatusCode()+" "+response.getStatusLine().getReasonPhrase());
+		Header[] h = response.getAllHeaders();
+		for (int i = 0; i < h.length; i++) {
+			LOG.debug("Header: "+h[i].getName()+ " "+h[i].getValue());
+		}
 		// validate response
 		InputStream r = response.getEntity().getContent();
 		String reponseMessage = IOUtils.toString( r, Charset.defaultCharset());
