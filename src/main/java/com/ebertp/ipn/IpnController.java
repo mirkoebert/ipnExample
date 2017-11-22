@@ -58,6 +58,11 @@ public class IpnController {
 
 		LOG.info("[ uri : {} ] - IPN Callback wird aufgerufen", reqUri);
 		// write an ipn flag to bestellung or do some other clever things
+		Enumeration<String> h = request.getHeaderNames();
+		while (h.hasMoreElements()) {
+			String s = (String) h.nextElement();
+			LOG.debug(s+" - "+request.getHeader(s));
+		}
 
 		BufferedReader r;
 		try {
