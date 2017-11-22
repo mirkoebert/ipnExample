@@ -1,2 +1,7 @@
 # ipnExample
-Example Spring Boot App for IPN (Instant Payment Notification) handling
+Example Spring Boot App (Java)  for IPN (Instant Payment Notification) handling
+
+## Run
+`mvn spring-boot:run`
+
+
