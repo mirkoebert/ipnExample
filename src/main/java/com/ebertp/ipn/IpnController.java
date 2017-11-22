@@ -1,6 +1,7 @@
 package com.ebertp.ipn;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -8,6 +9,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -97,6 +99,33 @@ public class IpnController {
 		}
 	}
 
+	@RequestMapping(value="/ipn2", method = RequestMethod.POST)
+	public void handleIpn2(HttpServletRequest request, HttpServletResponse response) {
+		String reqUri = "";
+		if (request != null) {
+			reqUri = request.getRequestURI();
+		}
+
+		LOG.info("[ uri : {} ] - IPN Callback wird aufgerufen", reqUri);
+		// write an ipn flag to bestellung or do some other clever things
+		Enumeration<String> h = request.getHeaderNames();
+		while (h.hasMoreElements()) {
+			String s = (String) h.nextElement();
+			LOG.debug("Header: "+s+" - "+request.getHeader(s));
+		}
+
+		try {
+			ServletInputStream in = request.getInputStream();
+			String ins = IOUtils.toString(in);
+			LOG.info("XXX1: "+ins);
+			sendIpnMessageToPaypal2(ins);
+			response.setStatus(200);
+		} catch (Exception e) {
+			response.setStatus(500);
+			LOG.error(e.getMessage());
+		}			
+	}
+	
 	/**
 	 * Return the unchanged IPN Message to Paypal only with notify validated.
 	 * 
