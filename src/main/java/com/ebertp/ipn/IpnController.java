@@ -38,10 +38,14 @@ public class IpnController {
 	private static Logger LOG = LoggerFactory.getLogger(IpnController.class);
 
 
+	@SuppressWarnings("unused")
 	private static final String urlPaypalSandbox1 = "https://ipnpb.sandbox.paypal.com/cgi-bin/webscr";
+	@SuppressWarnings("unused")
 	private static final String urlPaypalSandbox2 =  "https://www.sandbox.paypal.com/cgi-bin/webscr";
 	@SuppressWarnings("unused")
-	private static final String urlPaypalLive = "https://ipnpb.paypal.com/cgi-bin/webscr";
+	private static final String urlPaypalLive1 = "https://ipnpb.paypal.com/cgi-bin/webscr";
+	@SuppressWarnings("unused")
+	private static final String urlPaypalLive2 = "https://www.paypal.com/cgi-bin/webscr";
 
 
 	// TODO register IPN callback URL at Paypal Request
@@ -66,18 +70,15 @@ public class IpnController {
 			LOG.debug("Header: "+s+" - "+request.getHeader(s));
 		}
 
-		BufferedReader r;
 		try {
-			r = request.getReader();
-			StringBuffer buffer = new StringBuffer();
+			StringBuffer buffer = new StringBuffer("cmd=_notify-validate");
 			Enumeration<String> n = request.getParameterNames();
 			while (n.hasMoreElements()) {
-				
+				buffer.append("&");
 				String s = (String) n.nextElement();
 				buffer.append(s);
 				buffer.append("=");
 				buffer.append(request.getParameter(s));
-				buffer.append("&");
 			}
 			LOG.info("XXX1: "+buffer);
 			LOG.info("XXX2: "+request.getContentLength());
@@ -98,11 +99,10 @@ public class IpnController {
 	 * @param ipnMessage IPN Message
 	 * @throws Exception in case of an Error or Paypal send INVLAID back
 	 */
-	private void sendIpnMessageToPaypal(String ipnMessage) throws Exception {
+	private void sendIpnMessageToPaypal(String ipnReturnMessage) throws Exception {
 		String url = urlPaypalSandbox1;
 		// TODO do this in a new thread
 		LOG.debug("Test");
-		String ipnReturnMessage = ipnMessage+"cmd=_notify-validate";
 		LOG.info("Send IPN Message 'verified' to Paypal: "+url+" with IPN: "+ipnReturnMessage);
 
 		HttpClient client = HttpClientBuilder.create().build();
@@ -115,6 +115,7 @@ public class IpnController {
 		post.setHeader("host", "www.paypal.com");
 
 		post.setEntity(new StringEntity(ipnReturnMessage) );
+		
 		HttpResponse response = client.execute(post);
 		LOG.debug("Response Code : "  + response.getStatusLine().getStatusCode()+" "+response.getStatusLine().getReasonPhrase());
 		Header[] h = response.getAllHeaders();
