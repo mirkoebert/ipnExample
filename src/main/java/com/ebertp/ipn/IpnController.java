@@ -72,11 +72,12 @@ public class IpnController {
 			StringBuffer buffer = new StringBuffer();
 			Enumeration<String> n = request.getParameterNames();
 			while (n.hasMoreElements()) {
-				buffer.append("&");
+				
 				String s = (String) n.nextElement();
 				buffer.append(s);
 				buffer.append("=");
 				buffer.append(request.getParameter(s));
+				buffer.append("&");
 			}
 			LOG.info("XXX1: "+buffer);
 			LOG.info("XXX2: "+request.getContentLength());
@@ -101,7 +102,7 @@ public class IpnController {
 		String url = urlPaypalSandbox1;
 		// TODO do this in a new thread
 		LOG.debug("Test");
-		String ipnReturnMessage = "cmd=_notify-validate"+ipnMessage;
+		String ipnReturnMessage = ipnMessage+"cmd=_notify-validate";
 		LOG.info("Send IPN Message 'verified' to Paypal: "+url+" with IPN: "+ipnReturnMessage);
 
 		HttpClient client = HttpClientBuilder.create().build();
