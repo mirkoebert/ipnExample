@@ -74,17 +74,17 @@ public class IpnController {
 		}
 
 		try {
-			StringBuffer buffer = new StringBuffer();
+			StringBuffer buffer = new StringBuffer("cmd=_notify-validate");
 			Enumeration<String> n = request.getParameterNames();
 			while (n.hasMoreElements()) {
-				
+				buffer.append("&");
 				String s = (String) n.nextElement();
 				buffer.append(s);
 				buffer.append("=");
 				buffer.append(request.getParameter(s));
-				buffer.append("&");
+				//buffer.append("&");
 			}
-			buffer.append("cmd=_notify-validate");
+			//buffer.append("cmd=_notify-validate");
 			LOG.info("XXX2: "+request.getContentLength());
 
 			// TODO Identifizieren der Bestellung an Hand von Informationen aus dem IPN
