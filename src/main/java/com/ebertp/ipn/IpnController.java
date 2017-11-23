@@ -119,7 +119,6 @@ public class IpnController {
 		try {
 			StringBuffer buffer = new StringBuffer();
 			Enumeration<String> n = request.getParameterNames();
-			request.getP
 			while (n.hasMoreElements()) {
 				
 				String s = (String) n.nextElement();
