@@ -2,11 +2,13 @@ package com.ebertp.ipn;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -74,24 +76,30 @@ public class IpnController {
 		}
 
 		try {
-			StringBuffer buffer = new StringBuffer("cmd=_notify-validate");
-			Enumeration<String> n = request.getParameterNames();
-			while (n.hasMoreElements()) {
-				buffer.append("&");
-				String s = (String) n.nextElement();
-				buffer.append(s);
-				buffer.append("=");
-				buffer.append(URLEncoder.encode(request.getParameter(s), "UTF-8"));
-			}
+			String responseData = buildResponseData(request.getParameterNames(), request.getParameterMap());
 
 			// TODO Identifizieren der Bestellung an Hand von Informationen aus dem IPN
-			sendIpnMessageToPaypal2(urlPaypalSandbox2, buffer.toString());
+			sendIpnMessageToPaypal2(urlPaypalSandbox2, responseData);
 			//sendIpnMessageToPaypal2("http://localhost:1902/xxx", buffer.toString());
 			response.setStatus(200);
 		} catch (Exception e) {
 			response.setStatus(500);
 			LOG.error(e.getMessage());
 		}
+	}
+
+
+
+	String buildResponseData(Enumeration<String> n, Map<String, String[]> map) throws UnsupportedEncodingException {
+		StringBuffer buffer = new StringBuffer("cmd=_notify-validate");
+		while (n.hasMoreElements()) {
+			buffer.append("&");
+			String s = (String) n.nextElement();
+			buffer.append(s);
+			buffer.append("=");
+			buffer.append(URLEncoder.encode(map.get(s)[0], "UTF-8"));
+		}
+		return buffer.toString();
 	}
 
 
