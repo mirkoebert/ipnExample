@@ -88,8 +88,8 @@ public class IpnController {
 			LOG.info("XXX2: "+request.getContentLength());
 
 			// TODO Identifizieren der Bestellung an Hand von Informationen aus dem IPN
-			sendIpnMessageToPaypal2(urlPaypalSandbox2, buffer.toString());
-			sendIpnMessageToPaypal2("http://lovalhost:1902/xxx", buffer.toString());
+			//sendIpnMessageToPaypal2(urlPaypalSandbox2, buffer.toString());
+			sendIpnMessageToPaypal2("http://localhost:1902/xxx", buffer.toString());
 			// write empty 200 response
 			response.setStatus(200);
 		} catch (Exception e) {
