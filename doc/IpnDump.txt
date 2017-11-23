@@ -1,0 +1,14 @@
+# Dump HTTP Post Request from Paypal IPN Simulator via netcat
+
+root@ubuntu-jdk8-mvn-512mb-fra1-01:~/app/ipnExample# nc -l 80
+POST /ipn HTTP/1.1
+accept: */*
+user-agent: Needle/1.6.0 (Node.js v4.8.5; linux x64)
+content-length: 906
+content-type: application/x-www-form-urlencoded
+host: 138.68.85.236
+Connection: close
+
+payment_type=instant&payment_date=Thu%20Nov%2023%202017%2008%3A42%3A00%20GMT%2B0100%20%28CET%29&payment_status=Completed&address_status=confirmed&payer_status=verified&first_name=John&last_name=Smith&payer_email=buyer@paypalsandbox.com&payer_id=TESTBUYERID01&address_name=John%20Smith&address_country=United%20States&address_country_code=US&address_zip=95131&address_state=CA&address_city=San%20Jose&address_street=123%20any%20street&business=seller@paypalsandbox.com&receiver_email=seller@paypalsandbox.com&receiver_id=seller@paypalsandbox.com&residence_country=US&item_name1=something&item_number1=AK-1234&tax=2.02&mc_currency=USD&mc_fee=0.44&mc_gross=12.34&mc_gross_1=12.34&mc_handling=2.06&mc_handling1=1.67&mc_shipping=3.02&mc_shipping1=1.02&txn_type=cart&txn_id=615490311&notify_version=2.1&custom=xyz123&invoice=abc1234&test_ipn=1&verify_sign=AfDdcDwGFNNl9YX8sk3Oq5l8Xr6pAfZeG0Yyt4LzBiXOWyc7kQplMr.U
+
+

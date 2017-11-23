@@ -1,7 +1,5 @@
 package com.ebertp.ipn;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -9,7 +7,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -52,7 +49,6 @@ public class IpnController {
 	@SuppressWarnings("unused")
 	private static final String urlPaypalLive2 = "https://www.paypal.com/cgi-bin/webscr";
 	
-	private String url = urlPaypalSandbox2;
 
 
 	// TODO register IPN callback URL at Paypal Request
@@ -92,7 +88,8 @@ public class IpnController {
 			LOG.info("XXX2: "+request.getContentLength());
 
 			// TODO Identifizieren der Bestellung an Hand von Informationen aus dem IPN
-			sendIpnMessageToPaypal2(buffer.toString());
+			sendIpnMessageToPaypal2(urlPaypalSandbox2, buffer.toString());
+			sendIpnMessageToPaypal2("http://lovalhost:1902/xxx", buffer.toString());
 			// write empty 200 response
 			response.setStatus(200);
 		} catch (Exception e) {
@@ -109,7 +106,7 @@ public class IpnController {
 	 * @param ipnMessage IPN Message
 	 * @throws Exception in case of an Error or Paypal send INVLAID back
 	 */
-	private void sendIpnMessageToPaypal(String ipnReturnMessage) throws Exception {
+	private void sendIpnMessageToPaypal(String url, String ipnReturnMessage) throws Exception {
 		// TODO do this in a new thread
 		LOG.debug("Test");
 		LOG.info("Send IPN Message 'verified' to Paypal: "+url+" with IPN: "+ipnReturnMessage);
@@ -143,7 +140,7 @@ public class IpnController {
 	}
 
 
-	private void sendIpnMessageToPaypal2(String ipnReturnMessage) throws Exception {
+	private void sendIpnMessageToPaypal2(String url, String ipnReturnMessage) throws Exception {
 		// TODO do this in a new thread
 		LOG.debug("Test 2");
 		LOG.info("Send IPN Message 'verified' to Paypal: "+url+" with IPN: "+ipnReturnMessage);
@@ -163,7 +160,7 @@ public class IpnController {
 		if (ins.equalsIgnoreCase("VERIFIED")) {
 			LOG.info("IPN Message verified by Paypal successfully");
 		} else {
-			throw new Exception("IPN Message not verified by Paypal: "+m);
+			throw new Exception("IPN Message not verified by Paypal: "+ins);
 		}
 	}
 
