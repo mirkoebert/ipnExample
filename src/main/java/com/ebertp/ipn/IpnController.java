@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Empfängt IPN Events von Zahlungsdienstleistern wie z.B. PayPal. Der Zahlungsanbieter sendet 4 Tage lang IPN Events bis eine 
- * Bestätigung an ihn zurückgesendet wird. IPN ist nicht synchron. Unser IPN endpunkt muss per HTTPS erreichbar sein.
+ * Bestätigung an ihn zurückgesendet wird. IPN ist nicht synchron. Dieser IPN Endpunkt muss per HTTPS erreichbar sein.
  * @link https://developer.paypal.com/docs/classic/products/instant-payment-notification/
  * @link https://developer.paypal.com/docs/classic/ipn/integration-guide/IPNImplementation/
  *
@@ -43,7 +43,6 @@ public class IpnController {
 
 	@SuppressWarnings("unused")
 	private static final String urlPaypalSandbox1 = "https://ipnpb.sandbox.paypal.com/cgi-bin/webscr";
-	@SuppressWarnings("unused")
 	private static final String urlPaypalSandbox2 =  "https://www.sandbox.paypal.com/cgi-bin/webscr";
 	@SuppressWarnings("unused")
 	private static final String urlPaypalLive1 = "https://ipnpb.paypal.com/cgi-bin/webscr";
@@ -82,16 +81,12 @@ public class IpnController {
 				String s = (String) n.nextElement();
 				buffer.append(s);
 				buffer.append("=");
-				buffer.append(URLEncoder.encode(request.getParameter(s)));
-				//buffer.append("&");
+				buffer.append(URLEncoder.encode(request.getParameter(s), "UTF-8"));
 			}
-			//buffer.append("cmd=_notify-validate");
-			LOG.info("XXX2: "+request.getContentLength());
 
 			// TODO Identifizieren der Bestellung an Hand von Informationen aus dem IPN
 			sendIpnMessageToPaypal2(urlPaypalSandbox2, buffer.toString());
 			//sendIpnMessageToPaypal2("http://localhost:1902/xxx", buffer.toString());
-			// write empty 200 response
 			response.setStatus(200);
 		} catch (Exception e) {
 			response.setStatus(500);
@@ -155,7 +150,7 @@ public class IpnController {
 		conn.connect();
 		
 		InputStream in = conn.getInputStream();
-		String ins = IOUtils.toString(in);
+		String ins = IOUtils.toString(in, "UTF-8");
 		String m = conn.getResponseMessage();
 		LOG.debug("Response Code : "  + conn.getResponseCode()+" "+m+" - "+ins);
 		if (ins.equalsIgnoreCase("VERIFIED")) {
