@@ -12,3 +12,18 @@ Connection: close
 payment_type=instant&payment_date=Thu%20Nov%2023%202017%2008%3A42%3A00%20GMT%2B0100%20%28CET%29&payment_status=Completed&address_status=confirmed&payer_status=verified&first_name=John&last_name=Smith&payer_email=buyer@paypalsandbox.com&payer_id=TESTBUYERID01&address_name=John%20Smith&address_country=United%20States&address_country_code=US&address_zip=95131&address_state=CA&address_city=San%20Jose&address_street=123%20any%20street&business=seller@paypalsandbox.com&receiver_email=seller@paypalsandbox.com&receiver_id=seller@paypalsandbox.com&residence_country=US&item_name1=something&item_number1=AK-1234&tax=2.02&mc_currency=USD&mc_fee=0.44&mc_gross=12.34&mc_gross_1=12.34&mc_handling=2.06&mc_handling1=1.67&mc_shipping=3.02&mc_shipping1=1.02&txn_type=cart&txn_id=615490311&notify_version=2.1&custom=xyz123&invoice=abc1234&test_ipn=1&verify_sign=AfDdcDwGFNNl9YX8sk3Oq5l8Xr6pAfZeG0Yyt4LzBiXOWyc7kQplMr.U
 
 
+# Dump of HTTP Handshake Request send to Paypal via netcat
+
+root@ubuntu-jdk8-mvn-512mb-fra1-01:~# nc -l 1902
+POST /xxx HTTP/1.1
+User-Agent: Java/1.8.0_151
+Host: localhost:1902
+Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2
+Connection: keep-alive
+Content-type: application/x-www-form-urlencoded
+Content-Length: 895
+
+cmd=_notify-validate&payment_type=instant&payment_date=Thu Nov 23 2017 08:42:00 GMT+0100 (CET)&payment_status=Completed&address_status=confirmed&payer_status=verified&first_name=John&last_name=Smith&payer_email=buyer@paypalsandbox.com&payer_id=TESTBUYERID01&address_name=John Smith&address_country=United States&address_country_code=US&address_zip=95131&address_state=CA&address_city=San Jose&address_street=123 any street&business=seller@paypalsandbox.com&receiver_email=seller@paypalsandbox.com&receiver_id=seller@paypalsandbox.com&residence_country=US&item_name1=something&item_number1=AK-1234&tax=2.02&mc_currency=USD&mc_fee=0.44&mc_gross=12.34&mc_gross_1=12.34&mc_handling=2.06&mc_handling1=1.67&mc_shipping=3.02&mc_shipping1=1.02&txn_type=cart&txn_id=615490311&notify_version=2.1&custom=xyz123&invoice=abc1234&test_ipn=1&verify_sign=AwD4sJJmdrzDKNGw7KMAMuZSx1AHAillL6tP6ht0jva6013bxyayKQ03
+
+
+

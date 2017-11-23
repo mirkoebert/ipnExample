@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
 
@@ -81,7 +82,7 @@ public class IpnController {
 				String s = (String) n.nextElement();
 				buffer.append(s);
 				buffer.append("=");
-				buffer.append(request.getParameter(s));
+				buffer.append(URLEncoder.encode(request.getParameter(s)));
 				//buffer.append("&");
 			}
 			//buffer.append("cmd=_notify-validate");
@@ -109,6 +110,7 @@ public class IpnController {
 	private void sendIpnMessageToPaypal(String url, String ipnReturnMessage) throws Exception {
 		// TODO do this in a new thread
 		LOG.debug("Test");
+		String ipnReturnMessageEncoded = URLEncoder.encode(ipnReturnMessage);
 		LOG.info("Send IPN Message 'verified' to Paypal: "+url+" with IPN: "+ipnReturnMessage);
 
 		HttpClient client = HttpClientBuilder.create().build();
@@ -164,4 +166,10 @@ public class IpnController {
 		}
 	}
 
+	public static void main(String args[]) {
+		String s = "cmd=_notify-validate&payment_type=instant&payment_date=Thu Nov 23 2017 08:42:00 GMT+0100 (CET)&payment_status=Complete";
+		String se = URLEncoder.encode(s);
+		System.out.println(s);
+		System.out.println(se);
+	}
 }
