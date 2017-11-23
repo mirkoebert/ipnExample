@@ -101,44 +101,6 @@ public class IpnController {
 		}
 	}
 
-	@RequestMapping(value="/ipn2", method = RequestMethod.POST)
-	public void handleIpn2(HttpServletRequest request, HttpServletResponse response) {
-		String reqUri = "";
-		if (request != null) {
-			reqUri = request.getRequestURI();
-		}
-
-		LOG.info("[ uri : {} ] - IPN Callback wird aufgerufen", reqUri);
-		// write an ipn flag to bestellung or do some other clever things
-		Enumeration<String> h = request.getHeaderNames();
-		while (h.hasMoreElements()) {
-			String s = (String) h.nextElement();
-			LOG.debug("Header: "+s+" - "+request.getHeader(s));
-		}
-
-		try {
-			StringBuffer buffer = new StringBuffer();
-			Enumeration<String> n = request.getParameterNames();
-			while (n.hasMoreElements()) {
-				
-				String s = (String) n.nextElement();
-				buffer.append(s);
-				buffer.append("=");
-				buffer.append(request.getParameter(s));
-				buffer.append("&");
-			}
-			buffer.append("cmd=_notify-validate");
-			LOG.info("XXX2: "+request.getContentLength());
-
-			// TODO Identifizieren der Bestellung an Hand von Informationen aus dem IPN
-			sendIpnMessageToPaypal(buffer.toString());
-			// write empty 200 response
-			response.setStatus(200);
-		} catch (Exception e) {
-			response.setStatus(500);
-			LOG.error(e.getMessage());
-		}
-	}
 
 	
 	/**
@@ -193,8 +155,6 @@ public class IpnController {
 		OutputStream os = conn.getOutputStream();
 		os.write(ipnReturnMessage.getBytes());
 		conn.connect();
-		
-
 		
 		InputStream in = conn.getInputStream();
 		String ins = IOUtils.toString(in);
