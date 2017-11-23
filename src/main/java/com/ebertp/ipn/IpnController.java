@@ -89,8 +89,8 @@ public class IpnController {
 			LOG.info("XXX2: "+request.getContentLength());
 
 			// TODO Identifizieren der Bestellung an Hand von Informationen aus dem IPN
-			//sendIpnMessageToPaypal2(urlPaypalSandbox2, buffer.toString());
-			sendIpnMessageToPaypal2("http://localhost:1902/xxx", buffer.toString());
+			sendIpnMessageToPaypal2(urlPaypalSandbox2, buffer.toString());
+			//sendIpnMessageToPaypal2("http://localhost:1902/xxx", buffer.toString());
 			// write empty 200 response
 			response.setStatus(200);
 		} catch (Exception e) {
@@ -110,7 +110,6 @@ public class IpnController {
 	private void sendIpnMessageToPaypal(String url, String ipnReturnMessage) throws Exception {
 		// TODO do this in a new thread
 		LOG.debug("Test");
-		String ipnReturnMessageEncoded = URLEncoder.encode(ipnReturnMessage);
 		LOG.info("Send IPN Message 'verified' to Paypal: "+url+" with IPN: "+ipnReturnMessage);
 
 		HttpClient client = HttpClientBuilder.create().build();
@@ -166,10 +165,5 @@ public class IpnController {
 		}
 	}
 
-	public static void main(String args[]) {
-		String s = "cmd=_notify-validate&payment_type=instant&payment_date=Thu Nov 23 2017 08:42:00 GMT+0100 (CET)&payment_status=Complete";
-		String se = URLEncoder.encode(s);
-		System.out.println(s);
-		System.out.println(se);
-	}
+
 }
