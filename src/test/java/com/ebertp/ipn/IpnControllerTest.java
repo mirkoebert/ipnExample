@@ -2,15 +2,12 @@ package com.ebertp.ipn;
 
 import static org.junit.Assert.*;
 
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import org.junit.Test;
 
@@ -34,7 +31,7 @@ public class IpnControllerTest {
 		String[] names = {"payment_date","payment_status","address_status"};
 		Enumeration<String> en = Collections.enumeration(new ArrayList<>(Arrays.asList(names)));
 		
-		Map m = new HashMap<String, String[]>();
+		Map<String, String[]> m = new HashMap<String, String[]>();
 		m.put("payment_date", new String[]{"Thu%20Nov%2023%202017%2008%3A42%3A00%20GMT%2B0100%20%28CET%29"});
 		m.put("payment_status", new String[]{"Completed"});
 		m.put("address_status", new String[]{"confirmed"});
