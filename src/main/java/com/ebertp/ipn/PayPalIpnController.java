@@ -72,6 +72,7 @@ public class PayPalIpnController {
 			logRequestHeaders(request);
 		}
 		// write an ipn flag to bestellung or do some other clever things
+		LOG.info("Invoice: "+request.getParameter("invoice"));
 
 		try {
 			String responseData = buildResponseData(request.getParameterNames(), request.getParameterMap());
