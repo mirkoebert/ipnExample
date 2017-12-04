@@ -56,7 +56,11 @@
 			<version>1.2.3</version>
 		</dependency>
 
-
+		<dependency>
+    			<groupId>org.owasp</groupId>
+    			<artifactId>dependency-check-maven</artifactId>
+    			<version>3.0.2</version>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -70,6 +74,18 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+              			<groupId>org.owasp</groupId>
+              			<artifactId>dependency-check-maven</artifactId>
+              			<version>3.0.2</version>
+              			<executions>
+                  			<execution>
+                      				<goals>
+                          				<goal>check</goal>
+                      				</goals>
+                  			</execution>
+              			</executions>
+            		</plugin>
 		</plugins>
 	</build>
 

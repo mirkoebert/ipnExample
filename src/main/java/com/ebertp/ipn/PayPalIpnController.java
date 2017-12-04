@@ -159,7 +159,7 @@ public class PayPalIpnController {
 
 	private void sendIpnMessageToPaypal2(String url, String ipnReturnMessage) throws Exception {
 		// TODO do this in a new thread
-		// Don't write customer data to logs
+		// Don't write live customer data to logs
 		if(sandboxmode) {
 			LOG.debug("IPN: "+ipnReturnMessage);
 		}
