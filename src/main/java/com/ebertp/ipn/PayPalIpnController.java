@@ -48,8 +48,8 @@ public class PayPalIpnController {
 	private static final String urlPaypalSandbox2 =  "https://www.sandbox.paypal.com/cgi-bin/webscr";
 	@SuppressWarnings("unused")
 	private static final String urlPaypalLive1 = "https://ipnpb.paypal.com/cgi-bin/webscr";
-	@SuppressWarnings("unused")
 	private static final String urlPaypalLive2 = "https://www.paypal.com/cgi-bin/webscr";
+	private static final boolean sandboxmode = true;
 	
 
 
@@ -72,13 +72,17 @@ public class PayPalIpnController {
 			logRequestHeaders(request);
 		}
 		// write an ipn flag to bestellung or do some other clever things
-		LOG.info("Invoice: "+request.getParameter("invoice"));
+		LOG.debug("Invoice: "+request.getParameter("invoice"));
 
 		try {
 			String responseData = buildResponseData(request.getParameterNames(), request.getParameterMap());
 
 			// TODO Identifizieren der Bestellung an Hand von Informationen aus dem IPN
-			sendIpnMessageToPaypal2(urlPaypalSandbox2, responseData);
+			String paypalurl = urlPaypalSandbox2;
+			if(!sandboxmode) {
+				paypalurl = urlPaypalLive2;
+			}
+			sendIpnMessageToPaypal2(paypalurl, responseData);
 			//sendIpnMessageToPaypal2("http://localhost:1902/xxx", buffer.toString());
 			response.setStatus(200);
 		} catch (Exception e) {
@@ -155,8 +159,11 @@ public class PayPalIpnController {
 
 	private void sendIpnMessageToPaypal2(String url, String ipnReturnMessage) throws Exception {
 		// TODO do this in a new thread
-		LOG.debug("Test 2");
-		LOG.info("Send IPN Message 'verified' to Paypal: "+url+" with IPN: "+ipnReturnMessage);
+		// Don't write customer data to logs
+		if(sandboxmode) {
+			LOG.debug("IPN: "+ipnReturnMessage);
+		}
+		LOG.info("Send IPN Message 'verified' to Paypal: "+url);
 		
 		URL u = new URL(url);
 		HttpURLConnection conn = (HttpURLConnection) u.openConnection();
