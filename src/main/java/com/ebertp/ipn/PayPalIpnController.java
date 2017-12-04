@@ -36,11 +36,11 @@ import org.springframework.web.bind.annotation.RestController;
  *
  */
 @RestController
-public class IpnController {
+public class PayPalIpnController {
 
 
 	private static final String USER_AGENT = "ME IPN Responder";
-	private static Logger LOG = LoggerFactory.getLogger(IpnController.class);
+	private static Logger LOG = LoggerFactory.getLogger(PayPalIpnController.class);
 
 
 	@SuppressWarnings("unused")
@@ -68,12 +68,10 @@ public class IpnController {
 		}
 
 		LOG.info("[ uri : {} ] - IPN Callback wird aufgerufen", reqUri);
-		// write an ipn flag to bestellung or do some other clever things
-		Enumeration<String> h = request.getHeaderNames();
-		while (h.hasMoreElements()) {
-			String s = (String) h.nextElement();
-			LOG.debug("Header: "+s+" - "+request.getHeader(s));
+		if(LOG.isDebugEnabled()) {
+			logRequestHeaders(request);
 		}
+		// write an ipn flag to bestellung or do some other clever things
 
 		try {
 			String responseData = buildResponseData(request.getParameterNames(), request.getParameterMap());
@@ -85,6 +83,16 @@ public class IpnController {
 		} catch (Exception e) {
 			response.setStatus(500);
 			LOG.error(e.getMessage());
+		}
+	}
+
+
+
+	private void logRequestHeaders(HttpServletRequest request) {
+		Enumeration<String> h = request.getHeaderNames();
+		while (h.hasMoreElements()) {
+			String s = (String) h.nextElement();
+			LOG.debug("Header: "+s+" - "+request.getHeader(s));
 		}
 	}
 

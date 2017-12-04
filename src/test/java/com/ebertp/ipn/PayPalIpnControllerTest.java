@@ -11,11 +11,11 @@ import java.util.Map;
 
 import org.junit.Test;
 
-public class IpnControllerTest {
+public class PayPalIpnControllerTest {
 
 	@Test
 	public void testBuildResponseDataNullTest() {
-		IpnController ipnc = new IpnController();
+		PayPalIpnController ipnc = new PayPalIpnController();
 		try {
 			ipnc.buildResponseData(null, null);
 			fail("Expect Exception");
@@ -26,7 +26,7 @@ public class IpnControllerTest {
 
 	@Test
 	public void testBuildResponseDataIpnTest() {
-		IpnController ipnc = new IpnController();
+		PayPalIpnController ipnc = new PayPalIpnController();
 
 		String[] names = {"payment_date","payment_status","address_status"};
 		Enumeration<String> en = Collections.enumeration(new ArrayList<>(Arrays.asList(names)));
